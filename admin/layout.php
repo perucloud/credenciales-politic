@@ -240,7 +240,7 @@ $mobile_app_json = json_encode($mobile_app_modules, JSON_HEX_TAG | JSON_UNESCAPE
       transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
     }
     .nav-item:hover {
-      background: #2563EB;
+      background: #07AEEB;
       transform: scale(1.015);
     }
     .nav-active {
@@ -556,8 +556,9 @@ $mobile_app_json = json_encode($mobile_app_modules, JSON_HEX_TAG | JSON_UNESCAPE
 
   <!-- -- SIDEBAR ------------------------------------------- -->
   <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-         class="fixed top-0 left-0 h-full w-64 bg-[#0F2057] z-40 flex flex-col
-                transition-transform duration-300 lg:translate-x-0 overflow-y-auto overflow-x-visible">
+         class="fixed top-0 left-0 h-full w-64 z-40 flex flex-col
+                transition-transform duration-300 lg:translate-x-0 overflow-y-auto overflow-x-visible"
+         style="background: linear-gradient(180deg, #049CD4 0%, #137294 100%);">
 
     <!-- Logo / Marca -->
     <div class="px-5 py-5 border-b border-white/10 flex-shrink-0">
@@ -712,6 +713,11 @@ $mobile_app_json = json_encode($mobile_app_modules, JSON_HEX_TAG | JSON_UNESCAPE
       <!-- Separador si el botón está visible -->
       <div id="pwa-divider" style="display:none" class="border-t border-white/10 mb-1"></div>
 
+      <a href="<?= BASE_URL ?>/index.php?preview=1" target="_blank"
+         class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-r-xl text-sm text-blue-200 hover:text-white transition-all duration-150">
+        <i class="ti ti-external-link text-base flex-shrink-0 opacity-85"></i>
+        Ver sitio web
+      </a>
       <a href="<?= BASE_URL ?>/admin/logout.php"
          class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-r-xl text-sm text-red-300 hover:bg-red-500/15 hover:text-red-200 transition-all duration-150">
         <img src="<?= htmlspecialchars(admin_sidebar_icon_url('salir.png')) ?>" alt="" class="w-4 h-4 object-contain flex-shrink-0 opacity-85">
