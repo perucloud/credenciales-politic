@@ -17,7 +17,7 @@ function render_color_vars(array $cfg): string {
     $lines = [];
     foreach ($defs as $var => [$key, $default]) {
         $val = trim(cfg_value($cfg, $key, $default));
-        if (preg_match('/^#[0-9A-Fa-f]{3,8}$/', $val)) {
+        if (preg_match('/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/', $val)) {
             $lines[] = "$var:$val";
         }
     }

@@ -1,83 +1,32 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/includes/config/db.php';
 require_once __DIR__ . '/includes/helpers/config.php';
+require_once __DIR__ . '/includes/helpers/credenciales.php';
 
-$cfg_camp = [];
-try {
-    $cfg_camp = $pdo->query("SELECT clave, valor FROM configuracion")->fetchAll(PDO::FETCH_KEY_PAIR);
-} catch (Exception $e) {}
+$cfg_camp = cfg_load($pdo);
+
+if (cfg_value($cfg_camp, 'maintenance_active', '0') === '1') {
+    if (isset($_GET['json'])) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['ok' => false, 'msg' => 'El sitio se encuentra en mantenimiento.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    header('Location: ' . BASE_URL . '/maintenance.php');
+    exit;
+}
 
 $partido_nombre = strtoupper(cfg_value($cfg_camp, 'partido_nombre', 'RENOVACION POPULAR'));
 $brand_name = cfg_value($cfg_camp, 'site_brand_name', 'Sistema de Gestión de Credenciales');
 
-// ── Enmascarado de datos sensibles ─────────────────────────────
-// Nombre: primer nombre visible, segundo nombre como inicial y apellidos parcialmente enmascarados.
-function enmascarar_nombre(string $nombres_completos): string {
-    $normalizado = str_replace(',', ' ', trim($nombres_completos));
-    $partes = preg_split('/\s+/', $normalizado);
-    $partes = array_values(array_filter($partes, fn($p) => $p !== ''));
-    if (count($partes) === 0) return '---';
-    if (count($partes) === 1) return $partes[0];
-
-    $out = [];
-    foreach ($partes as $idx => $parte) {
-        $parte_fmt = mb_convert_case($parte, MB_CASE_TITLE, 'UTF-8');
-        if ($idx === 0) {
-            $out[] = $parte_fmt;
-        } elseif ($idx === 1 && count($partes) >= 4) {
-            $out[] = mb_substr($parte_fmt, 0, 1, 'UTF-8') . '.';
-        } else {
-            $out[] = mb_substr($parte_fmt, 0, 4, 'UTF-8') . '****';
-        }
-    }
-
-    return implode(' ', $out);
+// Refresca estado vencido on-the-fly, maximo una vez por hora (igual que en el modulo admin)
+$last_venc = $_SESSION['cred_vencidas_ts'] ?? 0;
+if ((time() - $last_venc) > 3600) {
+    try {
+        $pdo->exec("UPDATE credenciales SET estado='vencido' WHERE estado='activo' AND fecha_vencimiento < CURDATE()");
+        $_SESSION['cred_vencidas_ts'] = time();
+    } catch (Exception $e) {}
 }
-
-// DNI: primeros 3 dígitos + asteriscos
-function enmascarar_dni(string $dni): string {
-    $dni = trim($dni);
-    if (mb_strlen($dni) < 3) return str_repeat('*', mb_strlen($dni));
-    return mb_substr($dni, 0, 3) . str_repeat('*', max(0, mb_strlen($dni) - 3));
-}
-
-function fecha_es(?string $f): string {
-    if (!$f) return '—';
-    $ts = strtotime($f);
-    return $ts ? date('d/m/Y', $ts) : '—';
-}
-
-function estado_info(string $estado): array {
-    return match ($estado) {
-        'activo'  => ['label' => 'ACTIVA',  'color' => '#059669', 'bg' => '#D1FAE5', 'desc' => 'Esta credencial se encuentra vigente.'],
-        'vencido' => ['label' => 'VENCIDA', 'color' => '#D97706', 'bg' => '#FEF3C7', 'desc' => 'Esta credencial superó su fecha de vencimiento.'],
-        'anulado' => ['label' => 'ANULADA', 'color' => '#DC2626', 'bg' => '#FEE2E2', 'desc' => 'Esta credencial fue anulada y ya no es válida.'],
-        default   => ['label' => strtoupper($estado), 'color' => '#6B7280', 'bg' => '#F3F4F6', 'desc' => ''],
-    };
-}
-
-function credencial_payload_publico(array $row, string $partido_nombre): array {
-    $info = estado_info((string)$row['estado']);
-    return [
-        'partido'             => $partido_nombre,
-        'apellidos_nombres'   => enmascarar_nombre((string)$row['nombres_completos']),
-        'cargo'               => $row['cargo'] ?: 'Acreditado',
-        'dni'                 => enmascarar_dni((string)$row['dni']),
-        'caduca'              => fecha_es($row['fecha_vencimiento'] ?? null),
-        'provincia'           => $row['provincia'] ?: '---',
-        'distrito'            => $row['distrito'] ?: '---',
-        'codigo'              => $row['codigo'] ?? '',
-        'estado'              => $info['label'],
-        'estado_color'        => $info['color'],
-        'estado_bg'           => $info['bg'],
-        'estado_descripcion'  => $info['desc'],
-    ];
-}
-
-// Refresca estado vencido on-the-fly (igual que en el modulo admin)
-try {
-    $pdo->exec("UPDATE credenciales SET estado='vencido' WHERE estado='activo' AND fecha_vencimiento < CURDATE()");
-} catch (Exception $e) {}
 
 if (isset($_GET['json'])) {
     header('Content-Type: application/json; charset=utf-8');

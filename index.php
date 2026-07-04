@@ -9,10 +9,7 @@ if (!empty($_SESSION['admin_id'])) {
 
 require_once __DIR__ . '/includes/helpers/config.php';
 
-$cfg_camp = [];
-try {
-    $cfg_camp = $pdo->query("SELECT clave, valor FROM configuracion")->fetchAll(PDO::FETCH_KEY_PAIR);
-} catch (Exception $e) {}
+$cfg_camp = cfg_load($pdo);
 
 if (cfg_value($cfg_camp, 'maintenance_active', '0') === '1') {
     header('Location: ' . BASE_URL . '/maintenance.php');
@@ -106,7 +103,7 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
                 <?php if (!empty($slide['titulo'])): ?><h1 class="text-3xl sm:text-5xl font-black leading-tight mb-3"><?= htmlspecialchars($slide['titulo']) ?></h1><?php endif; ?>
                 <?php if (!empty($slide['subtitulo'])): ?><p class="text-white/85 text-lg mb-6"><?= htmlspecialchars($slide['subtitulo']) ?></p><?php endif; ?>
                 <?php if (!empty($slide['boton_texto'])): ?>
-                <a href="<?= htmlspecialchars($slide['boton_url'] ?: '#') ?>" class="inline-block rounded-full bg-white text-[#049CD4] px-6 py-3 text-sm font-black shadow-lg hover:-translate-y-0.5 transition-transform">
+                <a href="<?= htmlspecialchars($slide['boton_url'] ?: '#') ?>" class="btn-dyn inline-block rounded-full bg-white px-6 py-3 text-sm font-black shadow-lg hover:-translate-y-0.5 transition-transform" style="color:var(--color-primary)">
                   <?= htmlspecialchars($slide['boton_texto']) ?>
                 </a>
                 <?php endif; ?>
@@ -128,7 +125,7 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
       });
     </script>
     <?php else: ?>
-    <div class="aspect-[1800/650] w-full flex items-center justify-center" style="background: linear-gradient(135deg, #049CD4 0%, #028FB7 100%);">
+    <div class="aspect-[1800/650] w-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);">
       <span class="text-white/70 text-sm font-semibold">Configura las imagenes del hero desde el dashboard</span>
     </div>
     <?php endif; ?>
@@ -137,13 +134,14 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
   <!-- ══ QUIEN ES ═════════════════════════════════════════════ -->
   <section id="quien-es" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
     <div class="order-2 lg:order-1">
-      <p class="text-xs font-black uppercase tracking-widest text-[#049CD4] mb-3"><?= htmlspecialchars($bio_eyebrow) ?></p>
+      <p class="text-xs font-black uppercase tracking-widest mb-3" style="color:var(--color-primary)"><?= htmlspecialchars($bio_eyebrow) ?></p>
       <h2 class="text-3xl sm:text-4xl font-black text-gray-800 leading-tight mb-5">
         <?php foreach (explode('|', $bio_title) as $line): ?><?= htmlspecialchars($line) ?><br><?php endforeach; ?>
       </h2>
       <p class="text-gray-600 mb-4 leading-relaxed"><?= nl2br(htmlspecialchars($bio_p1)) ?></p>
       <?php if ($bio_p2 !== ''): ?><p class="text-gray-600 mb-6 leading-relaxed"><?= nl2br(htmlspecialchars($bio_p2)) ?></p><?php endif; ?>
-      <a href="<?= htmlspecialchars($bio_button_url) ?>" class="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-black text-white shadow-lg" style="background:#049CD4">
+      <a href="<?= htmlspecialchars($bio_button_url) ?>" class="btn-dyn inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-black shadow-lg"
+         style="background:var(--color-btn-download);color:var(--color-btn-download-text)">
         <?= htmlspecialchars($bio_button_text) ?>
       </a>
     </div>
@@ -164,13 +162,13 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
   <section id="plan" class="bg-[#F0FAFF] py-16 sm:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <p class="text-xs font-black uppercase tracking-widest text-[#049CD4] mb-3">Propuestas</p>
+        <p class="text-xs font-black uppercase tracking-widest mb-3" style="color:var(--color-primary)">Propuestas</p>
         <h2 class="text-3xl sm:text-4xl font-black text-gray-800">Nuestro Plan de Accion</h2>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($work_axes as $eje): ?>
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 hover:shadow-lg transition-shadow">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:#049CD4">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:var(--color-primary)">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="<?= htmlspecialchars(cfg_axis_icon_path($eje['icon'] ?? '')) ?>"/>
             </svg>
@@ -187,7 +185,7 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
   <!-- ══ REDES SOCIALES ═══════════════════════════════════════ -->
   <?php if ($social_enabled && $social_fb_url !== ''): ?>
   <section id="redes-sociales" class="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
-    <p class="text-xs font-black uppercase tracking-widest text-[#049CD4] mb-3">Sigenos</p>
+    <p class="text-xs font-black uppercase tracking-widest mb-3" style="color:var(--color-primary)">Sigenos</p>
     <h2 class="text-3xl sm:text-4xl font-black text-gray-800 mb-8">Redes Sociales</h2>
     <div class="flex justify-center overflow-hidden rounded-2xl border border-gray-100 shadow-sm">
       <iframe src="https://www.facebook.com/plugins/page.php?href=<?= urlencode($social_fb_url) ?>&tabs=timeline&width=500&height=550&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
@@ -201,7 +199,7 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
   <section id="noticias" class="bg-gray-50 py-16 sm:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-2xl mx-auto mb-12">
-        <p class="text-xs font-black uppercase tracking-widest text-[#049CD4] mb-3">Actualidad</p>
+        <p class="text-xs font-black uppercase tracking-widest mb-3" style="color:var(--color-primary)">Actualidad</p>
         <h2 class="text-3xl sm:text-4xl font-black text-gray-800">Ultimas Noticias</h2>
       </div>
       <?php if ($noticias): ?>
@@ -229,7 +227,7 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
 
   <!-- ══ SE PARTE DEL CAMBIO ══════════════════════════════════ -->
   <section id="unete" x-data="joinFlow()" class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
-    <p class="text-xs font-black uppercase tracking-widest text-[#049CD4] mb-3">Se parte del cambio en Satipo</p>
+    <p class="text-xs font-black uppercase tracking-widest mb-3" style="color:var(--color-primary)">Se parte del cambio en Satipo</p>
     <h2 class="text-2xl sm:text-3xl font-black text-gray-800 mb-3">Solo ingresa tu DNI y forma parte de este gran proyecto</h2>
     <p class="text-gray-500 mb-8">Suma tu energia, tus ideas y tu compromiso a este equipo.</p>
 
@@ -237,7 +235,8 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
       <input type="text" x-model="dni" maxlength="8" inputmode="numeric" placeholder="Ingresa tu DNI"
              @input="dni = dni.replace(/\D/g,'').slice(0,8)"
              class="flex-1 rounded-full border-2 border-gray-200 px-5 py-3 text-sm font-bold font-mono outline-none focus:border-[#049CD4] focus:ring-4 focus:ring-[#049CD4]/10">
-      <button type="submit" class="rounded-full px-6 py-3 text-sm font-black text-white shadow-lg whitespace-nowrap" style="background:#049CD4">Unirme al Cambio</button>
+      <button type="submit" class="btn-dyn rounded-full px-6 py-3 text-sm font-black shadow-lg whitespace-nowrap"
+              style="background:var(--color-btn-join);color:var(--color-btn-join-text)">Unirme al Cambio</button>
     </form>
     <p x-show="topError" x-cloak x-text="topError" class="text-red-500 text-xs font-semibold mt-3"></p>
 
@@ -245,7 +244,7 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
     <div x-show="modalOpen" x-cloak x-transition class="fixed inset-0 z-[130] flex items-start justify-center overflow-y-auto p-4">
       <div class="absolute inset-0 bg-slate-950/75 backdrop-blur-sm" @click="modalOpen = false"></div>
       <div x-transition class="relative z-10 my-8 w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl text-left">
-        <div class="px-6 py-5 text-white" style="background:#049CD4">
+        <div class="px-6 py-5 text-white" style="background:var(--color-primary)">
           <div class="flex items-start justify-between gap-4">
             <div>
               <p class="text-[11px] font-black uppercase tracking-[0.18em] text-white/80">Registro de simpatizante</p>
@@ -311,8 +310,8 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
           <p x-show="error" x-cloak x-text="error" class="text-red-600 text-sm font-semibold bg-red-50 border border-red-100 rounded-xl px-4 py-3"></p>
 
           <button type="submit" :disabled="loading"
-                  class="w-full rounded-full py-3 text-sm font-black text-white shadow-lg disabled:opacity-60"
-                  style="background:#049CD4">
+                  class="btn-dyn w-full rounded-full py-3 text-sm font-black shadow-lg disabled:opacity-60"
+                  style="background:var(--color-btn-join);color:var(--color-btn-join-text)">
             <span x-text="loading ? 'Enviando...' : 'Finalizar registro'"></span>
           </button>
         </form>
@@ -325,7 +324,7 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
             </div>
             <h3 class="font-black text-gray-800 text-lg mb-1">Registro exitoso</h3>
             <p class="text-gray-500 text-sm">Gracias por sumarte al equipo. Pronto nos pondremos en contacto contigo.</p>
-            <button type="button" @click="modalOpen = false" class="mt-6 rounded-full px-6 py-2.5 text-sm font-black text-white" style="background:#049CD4">Cerrar</button>
+            <button type="button" @click="modalOpen = false" class="btn-dyn mt-6 rounded-full px-6 py-2.5 text-sm font-black" style="background:var(--color-primary);color:#fff">Cerrar</button>
           </div>
         </template>
       </div>

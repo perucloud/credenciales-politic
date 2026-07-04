@@ -1,9 +1,7 @@
 <?php
+require_once __DIR__ . '/helpers/config.php';
 if (!isset($cfg_camp)) {
-    $cfg_camp = [];
-    try {
-        $cfg_camp = $pdo->query("SELECT clave, valor FROM configuracion")->fetchAll(PDO::FETCH_KEY_PAIR);
-    } catch (Exception $e) {}
+    $cfg_camp = cfg_load($pdo);
 }
 
 if (!function_exists('footer_whatsapp_url')) {

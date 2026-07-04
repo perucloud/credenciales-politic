@@ -1,7 +1,13 @@
 <?php
 require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/helpers/config.php';
 
 header('Content-Type: application/json; charset=utf-8');
+
+if (cfg_value(cfg_load($pdo), 'maintenance_active', '0') === '1') {
+    echo json_encode(['ok' => false, 'error' => 'El sitio se encuentra en mantenimiento.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 $nombre = trim($_POST['nombre'] ?? '');
 $dni = preg_replace('/\D+/', '', $_POST['dni'] ?? '');

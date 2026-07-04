@@ -2,10 +2,7 @@
 require_once __DIR__ . '/includes/config/db.php';
 require_once __DIR__ . '/includes/helpers/config.php';
 
-$cfg_camp = [];
-try {
-    $cfg_camp = $pdo->query("SELECT clave, valor FROM configuracion")->fetchAll(PDO::FETCH_KEY_PAIR);
-} catch (Exception $e) {}
+$cfg_camp = cfg_load($pdo);
 
 $brand_name = cfg_value($cfg_camp, 'site_brand_name', 'Credenciales App');
 $maint_logo = cfg_value($cfg_camp, 'maint_logo', cfg_value($cfg_camp, 'site_header_logo', '/assets/img/logos/logorp.webp'));

@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 require_once __DIR__ . '/../includes/config/db.php';
 require_once __DIR__ . '/config/auth.php';
+require_once __DIR__ . '/../includes/helpers/credenciales.php';
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 require_login();
@@ -213,11 +214,6 @@ $qr_uri  = $qr_path && is_file($qr_path) ? img_to_data_uri($qr_path) : '';
 
 // ── Helpers de presentación ───────────────────────────────────
 function h(?string $v): string { return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8'); }
-function fecha_es(?string $f): string {
-    if (!$f) return '—';
-    $ts = strtotime($f);
-    return $ts ? date('d/m/Y', $ts) : '—';
-}
 function fecha_larga_es(): string {
     $meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
     return (int)date('j') . ' de ' . $meses[(int)date('n') - 1] . ' de ' . date('Y');

@@ -3,6 +3,16 @@
 // Helpers simples para configuracion key/value del sitio.
 // ============================================================
 
+if (!function_exists('cfg_load')) {
+    function cfg_load(PDO $pdo): array {
+        try {
+            return $pdo->query("SELECT clave, valor FROM configuracion")->fetchAll(PDO::FETCH_KEY_PAIR);
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+}
+
 if (!function_exists('cfg_value')) {
     function cfg_value(array $config, string $key, string $default = ''): string {
         $raw = $config[$key] ?? null;

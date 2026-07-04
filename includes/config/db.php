@@ -47,7 +47,12 @@ if (!defined('SKIP_DB_CONNECT')) {
         die(json_encode(['error' => 'Error de conexion a la base de datos.']));
     }
 
-    // Migraciones automáticas ligeras (columnas opcionales)
+    // Migraciones automáticas ligeras (columnas opcionales).
+    // Se ejecutan como máximo una vez por sesión (si hay sesión activa) para
+    // no repetir ~15 sentencias DDL/DML en cada request del sitio.
+    $_schema_ya_migrado = session_status() === PHP_SESSION_ACTIVE && !empty($_SESSION['schema_migrado_v1']);
+
+    if (!$_schema_ya_migrado) {
     try {
         $pdo->exec("ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS remember_token VARCHAR(64) NULL DEFAULT NULL");
     } catch (Exception $_e) {}
@@ -171,4 +176,9 @@ if (!defined('SKIP_DB_CONNECT')) {
             INDEX idx_media_files_creado (creado_en)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
     } catch (Exception $_e) {}
+
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        $_SESSION['schema_migrado_v1'] = true;
+    }
+    }
 }

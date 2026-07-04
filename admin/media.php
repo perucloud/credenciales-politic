@@ -56,16 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
 }
 
 // ── Acción: Subir archivos ────────────────────────────────────
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'upload') {
+// Si la solicitud excede post_max_size, PHP vacía $_POST y $_FILES por
+// completo, por lo que este chequeo debe ir antes de mirar $_POST['action'].
+$content_length = (int)($_SERVER['CONTENT_LENGTH'] ?? 0);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $content_length > 0 && empty($_FILES) && empty($_POST)) {
+    $flash      = 'La solicitud supera el límite del servidor (' . ini_get('post_max_size') . '). Reduce el tamaño o sube de a un archivo.';
+    $flash_type = 'error';
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'upload') {
     $uploaded  = 0;
     $errors    = [];
-
-    $content_length = (int)($_SERVER['CONTENT_LENGTH'] ?? 0);
-    if ($content_length > 0 && empty($_FILES) && empty($_POST)) {
-        $flash      = 'La solicitud supera el límite del servidor (' . ini_get('post_max_size') . '). Reduce el tamaño o sube de a un archivo.';
-        $flash_type = 'error';
-        goto end_upload;
-    }
 
     $files_raw = $_FILES['archivos'] ?? null;
 
@@ -169,8 +168,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'uploa
         $flash      = 'No se subió ningún archivo. ' . implode(' / ', $errors);
         $flash_type = 'error';
     }
-
-    end_upload:;
 }
 
 // ── Cargar archivos de la DB ──────────────────────────────────

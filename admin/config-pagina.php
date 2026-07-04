@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $values = [];
         foreach ($color_keys as $key) {
             $val = trim($_POST[$key] ?? '');
-            if (preg_match('/^#[0-9A-Fa-f]{3,8}$/', $val)) {
+            if (preg_match('/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/', $val)) {
                 $values[$key] = $val;
             }
         }
