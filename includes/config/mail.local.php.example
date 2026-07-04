@@ -1,0 +1,10 @@
+<?php
+return [
+    'host'      => 'smtp.tudominio.pe',
+    'port'      => 465,
+    'secure'    => 'ssl',
+    'user'      => 'sistema@tudominio.pe',
+    'pass'      => 'CAMBIAR_POR_PASSWORD_REAL',
+    'from'      => 'sistema@tudominio.pe',
+    'from_name' => 'Credenciales App',
+];

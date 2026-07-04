@@ -1,0 +1,25 @@
+{
+  "name": "Credenciales App - Panel Admin",
+  "short_name": "Credenciales Admin",
+  "description": "Panel de administracion de Credenciales App",
+  "start_url": "/admin/dashboard.php",
+  "scope": "/admin/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0F2057",
+  "theme_color": "#1E3A8A",
+  "lang": "es",
+  "icons": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/admin/dashboard.php",
+      "description": "Ir al dashboard principal"
+    },
+    {
+      "name": "Credenciales",
+      "url": "/admin/credenciales-modulo.php",
+      "description": "Gestionar credenciales"
+    }
+  ]
+}

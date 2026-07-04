@@ -1,0 +1,6 @@
+/vendor/
+/includes/config/db.local.php
+/includes/config/mail.local.php
+/includes/config/reniec.local.php
+/logs/
+/uploads/

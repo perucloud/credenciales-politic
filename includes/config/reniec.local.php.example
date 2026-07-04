@@ -1,0 +1,6 @@
+<?php
+// Copia este archivo como reniec.local.php y completa tu token de https://app.json.pe/api-consulta
+return [
+    'api_url'   => 'https://api.json.pe/api/dni',
+    'api_token' => '',
+];

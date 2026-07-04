@@ -1,0 +1,13 @@
+{
+    "name": "credenciales-app/panel",
+    "description": "Panel administrativo de gestion de credenciales",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "endroid/qr-code": "^6.0",
+        "dompdf/dompdf": "^3.0"
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
