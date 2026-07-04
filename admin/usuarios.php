@@ -12,6 +12,7 @@ $page_title = 'Usuarios';
 
 $modulos_disponibles = [
     'simpatizantes'          => 'Simpatizantes',
+    'militantes'              => 'Militantes',
     'personeros'              => 'Personeros',
     'credenciales_modulo'      => 'Credenciales',
     'credenciales_escaneadas'  => 'Credenciales escaneadas',

@@ -21,10 +21,8 @@ ensure_simpatizante_estado($pdo);
 
 $flash = null;
 $flash_type = 'success';
-// El modulo "militantes" no existe en credenciales-app (solo se migraron
-// Dashboard, Simpatizantes, Personeros y Credenciales), por lo que la
-// conversion a militante queda deshabilitada permanentemente.
-$can_manage_militantes = false;
+$_modulos_sesion = usuario_modulos_permitidos($pdo, (int)($_SESSION['admin_id'] ?? 0));
+$can_manage_militantes = $_modulos_sesion === null || in_array('militantes', $_modulos_sesion, true);
 
 if (isset($_GET['msg'])) {
     $messages = [

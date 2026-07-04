@@ -58,6 +58,7 @@ $secciones = [
           ['href'=>'exportar-pdf.php',           'label'=>'Exportar PDF',   'icon'=>$ic_pdf, 'target'=>'_blank'],
         ]
       ],
+      ['id'=>'militantes','href'=>'militantes.php','icon'=>'ti-users-group','icon_img'=>'militante.png','label'=>'Militantes','rol'=>'editor','modulo'=>'militantes','solo_rol'=>null,'submenu'=>null],
       ['id'=>'personeros','href'=>'personeros.php','icon'=>'ti-id-badge-2','icon_img'=>'personero.png','label'=>'Personeros','rol'=>'editor','modulo'=>'personeros','solo_rol'=>null,'submenu'=>null],
       ['id'=>'credenciales_modulo','href'=>'credenciales-modulo.php','icon'=>'ti-id-badge-2','icon_img'=>'credencial.png','label'=>'Credenciales','rol'=>'editor','modulo'=>'credenciales_modulo','solo_rol'=>null,
         'submenu'=>[

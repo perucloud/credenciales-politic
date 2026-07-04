@@ -179,6 +179,92 @@ CREATE TABLE `credenciales_escaneadas` (
   KEY `idx_ce_nombre` (`nombres_completos`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `militante_cargos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(120) NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `orden` int NOT NULL DEFAULT '0',
+  `creado_en` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO militante_cargos (nombre, orden) VALUES
+  ('Coordinador Provincial', 10),
+  ('Coordinador Distrital', 20),
+  ('Secretario', 30),
+  ('Delegado', 40),
+  ('Dirigente', 50);
+
+CREATE TABLE `militantes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `simpatizante_id` int DEFAULT NULL,
+  `nombre` varchar(150) NOT NULL,
+  `dni` char(8) NOT NULL,
+  `celular` varchar(20) DEFAULT NULL,
+  `whatsapp` varchar(20) DEFAULT NULL,
+  `correo` varchar(150) DEFAULT NULL,
+  `cargo_id` int DEFAULT NULL,
+  `fecha_ingreso` date NOT NULL,
+  `estado` enum('activo','inactivo') NOT NULL DEFAULT 'activo',
+  `creado_en` datetime DEFAULT CURRENT_TIMESTAMP,
+  `actualizado_en` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `dni` (`dni`),
+  KEY `idx_militantes_estado` (`estado`),
+  KEY `idx_militantes_cargo` (`cargo_id`),
+  KEY `idx_militantes_fecha` (`fecha_ingreso`),
+  CONSTRAINT `fk_militantes_simpatizante` FOREIGN KEY (`simpatizante_id`) REFERENCES `simpatizantes` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_militantes_cargo` FOREIGN KEY (`cargo_id`) REFERENCES `militante_cargos` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `militante_mensajes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `canal` enum('whatsapp','sms','correo') NOT NULL,
+  `asunto` varchar(180) DEFAULT NULL,
+  `mensaje` text NOT NULL,
+  `alcance` enum('individual','grupo','masivo') NOT NULL DEFAULT 'individual',
+  `adjunto_nombre` varchar(180) DEFAULT NULL,
+  `adjunto_ruta` varchar(255) DEFAULT NULL,
+  `adjunto_tipo` varchar(120) DEFAULT NULL,
+  `adjunto_tamanio` int DEFAULT NULL,
+  `creado_por` int DEFAULT NULL,
+  `creado_en` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_militante_mensajes_canal` (`canal`),
+  KEY `idx_militante_mensajes_creado` (`creado_en`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `militante_mensaje_destinatarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `mensaje_id` int NOT NULL,
+  `militante_id` int NOT NULL,
+  `estado` enum('pendiente','enviado','fallido') NOT NULL DEFAULT 'pendiente',
+  `enviado_en` datetime DEFAULT NULL,
+  `error` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_mensaje_militante` (`mensaje_id`,`militante_id`),
+  CONSTRAINT `fk_mmd_mensaje` FOREIGN KEY (`mensaje_id`) REFERENCES `militante_mensajes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_mmd_militante` FOREIGN KEY (`militante_id`) REFERENCES `militantes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `militante_mensaje_canales` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `mensaje_id` int NOT NULL,
+  `canal` enum('whatsapp','sms','correo') NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_mensaje_canal` (`mensaje_id`,`canal`),
+  CONSTRAINT `fk_mmc_mensaje` FOREIGN KEY (`mensaje_id`) REFERENCES `militante_mensajes` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `militante_wa_plantillas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(200) NOT NULL,
+  `contenido` text NOT NULL,
+  `creado_en` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `usuario_permisos_modulo` (
   `usuario_id` int NOT NULL,
   `modulo` varchar(60) NOT NULL,
@@ -187,7 +273,8 @@ CREATE TABLE `usuario_permisos_modulo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Usuario superadmin inicial (control total, sin restricciones de modulo).
--- Contraseña en texto plano: admin123
--- Hash generado con password_hash('admin123', PASSWORD_DEFAULT)
-INSERT IGNORE INTO usuarios (nombre, email, password, rol) VALUES
-('Administrador', 'admin@credenciales-app.local', '$2y$10$RiX7Owy6hHUfg1mKiLBFeuFQR1jtbE0KHdzrQw03INTtt9DDgJ6yC', 'superadmin');
+-- Contraseña en texto plano: PeterJohn123;@
+-- Hash generado con password_hash('PeterJohn123;@', PASSWORD_DEFAULT)
+INSERT INTO usuarios (nombre, email, password, rol) VALUES
+('Administrador', 'sistemas@perucloud.net.pe', '$2y$10$UiHfEIs7d2ngs3J/w97La.wdr0flmxhWLzypdo151aBh28ipB/8p2', 'superadmin')
+ON DUPLICATE KEY UPDATE password = VALUES(password), rol = VALUES(rol), activo = 1;
