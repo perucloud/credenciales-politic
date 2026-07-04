@@ -40,14 +40,14 @@ if (empty($GLOBALS['__color_vars_printed'])) {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
 
-      <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-3 min-w-0">
+      <a href="<?= htmlspecialchars(public_nav_url('/index.php')) ?>" class="flex items-center gap-3 min-w-0">
         <img src="<?= htmlspecialchars(nav_url($nav_logo)) ?>" alt="Logo" class="h-9 w-auto flex-shrink-0" onerror="this.style.display='none'">
         <span class="font-black text-[#049CD4] text-sm sm:text-base truncate"><?= htmlspecialchars($nav_brand_name) ?></span>
       </a>
 
       <nav class="hidden lg:flex items-center gap-6">
         <?php foreach ($nav_items as $item): ?>
-          <a href="<?= htmlspecialchars(nav_url($item['url'])) ?>" class="text-sm font-semibold text-gray-600 hover:text-[#049CD4] transition-colors"><?= htmlspecialchars($item['label']) ?></a>
+          <a href="<?= htmlspecialchars(public_nav_url($item['url'])) ?>" class="text-sm font-semibold text-gray-600 hover:text-[#049CD4] transition-colors"><?= htmlspecialchars($item['label']) ?></a>
         <?php endforeach; ?>
       </nav>
 
@@ -59,7 +59,7 @@ if (empty($GLOBALS['__color_vars_printed'])) {
           Verificar credencial
         </button>
         <a href="<?= BASE_URL ?>/admin/login.php" class="text-xs font-semibold text-gray-400 hover:text-gray-600 transition-colors">Intranet</a>
-        <a href="<?= htmlspecialchars(nav_url($nav_cta_url)) ?>" class="btn-dyn rounded-full px-5 py-2.5 text-sm font-bold shadow"
+        <a href="<?= htmlspecialchars(public_nav_url($nav_cta_url)) ?>" class="btn-dyn rounded-full px-5 py-2.5 text-sm font-bold shadow"
            style="background-color:var(--color-btn-cta-navbar);color:var(--color-btn-cta-navbar-text)">
           <?= htmlspecialchars($nav_cta_text) ?>
         </a>
@@ -75,9 +75,9 @@ if (empty($GLOBALS['__color_vars_printed'])) {
 
     <div x-show="open" x-cloak x-transition class="lg:hidden pb-4 space-y-1">
       <?php foreach ($nav_items as $item): ?>
-        <a href="<?= htmlspecialchars(nav_url($item['url'])) ?>" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50"><?= htmlspecialchars($item['label']) ?></a>
+        <a href="<?= htmlspecialchars(public_nav_url($item['url'])) ?>" class="block px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50"><?= htmlspecialchars($item['label']) ?></a>
       <?php endforeach; ?>
-      <a href="<?= htmlspecialchars(nav_url($nav_cta_url)) ?>" class="btn-dyn block text-center rounded-full px-5 py-2.5 text-sm font-bold mt-2"
+      <a href="<?= htmlspecialchars(public_nav_url($nav_cta_url)) ?>" class="btn-dyn block text-center rounded-full px-5 py-2.5 text-sm font-bold mt-2"
          style="background-color:var(--color-btn-cta-navbar);color:var(--color-btn-cta-navbar-text)">
         <?= htmlspecialchars($nav_cta_text) ?>
       </a>

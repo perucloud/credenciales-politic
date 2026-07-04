@@ -30,6 +30,34 @@ if (!function_exists('cfg_json')) {
     }
 }
 
+if (!function_exists('public_preview_active')) {
+    // Cierto cuando un admin logueado esta navegando el sitio publico en
+    // modo vista previa (ver admin/layout.php "Ver sitio web" e index.php).
+    function public_preview_active(): bool {
+        return !empty($_SESSION['admin_id']) && !empty($_GET['preview']);
+    }
+}
+
+if (!function_exists('public_nav_url')) {
+    // Arma una URL interna del sitio publico, preservando ?preview=1 (antes
+    // del fragmento #ancla si lo tiene) cuando el modo vista previa esta
+    // activo, para que un admin pueda navegar el landing sin ser rebotado
+    // al dashboard en cada clic.
+    function public_nav_url(string $url): string {
+        if ($url === '' || $url[0] === '#' || preg_match('#^(https?:)?//#i', $url)) return $url;
+
+        $hash_pos = strpos($url, '#');
+        $path = $hash_pos !== false ? substr($url, 0, $hash_pos) : $url;
+        $hash = $hash_pos !== false ? substr($url, $hash_pos) : '';
+
+        $full = (defined('BASE_URL') ? BASE_URL : '') . '/' . ltrim($path, '/');
+        if (public_preview_active()) {
+            $full .= (str_contains($path, '?') ? '&' : '?') . 'preview=1';
+        }
+        return $full . $hash;
+    }
+}
+
 if (!function_exists('cfg_save_values')) {
     function cfg_save_values(PDO $pdo, array $values): void {
         $stmt = $pdo->prepare(

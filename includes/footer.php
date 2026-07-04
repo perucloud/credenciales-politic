@@ -46,11 +46,11 @@ $mobile_nav_items = [
       <div>
         <h4 class="font-bold text-[#67D6F5] uppercase text-xs tracking-widest mb-4">Navegacion</h4>
         <ul class="space-y-2 text-sm text-gray-300">
-          <li><a href="<?= BASE_URL ?>/index.php" class="hover:text-white transition-colors">Inicio</a></li>
-          <li><a href="<?= BASE_URL ?>/index.php#quien-es" class="hover:text-white transition-colors">Quien es?</a></li>
-          <li><a href="<?= BASE_URL ?>/index.php#plan" class="hover:text-white transition-colors">Nuestro Plan de Accion</a></li>
-          <li><a href="<?= BASE_URL ?>/index.php#noticias" class="hover:text-white transition-colors">Noticias</a></li>
-          <li><a href="<?= BASE_URL ?>/index.php#contacto" class="hover:text-white transition-colors">Local de Campaña</a></li>
+          <li><a href="<?= htmlspecialchars(public_nav_url('/index.php')) ?>" class="hover:text-white transition-colors">Inicio</a></li>
+          <li><a href="<?= htmlspecialchars(public_nav_url('/index.php#quien-es')) ?>" class="hover:text-white transition-colors">Quien es?</a></li>
+          <li><a href="<?= htmlspecialchars(public_nav_url('/index.php#plan')) ?>" class="hover:text-white transition-colors">Nuestro Plan de Accion</a></li>
+          <li><a href="<?= htmlspecialchars(public_nav_url('/index.php#noticias')) ?>" class="hover:text-white transition-colors">Noticias</a></li>
+          <li><a href="<?= htmlspecialchars(public_nav_url('/index.php#contacto')) ?>" class="hover:text-white transition-colors">Local de Campaña</a></li>
           <li>
             <button type="button"
                     onclick="window.dispatchEvent(new CustomEvent('abrir-verificador-credencial')); if (!window.__credencialVerifierReady) window.location.href='<?= BASE_URL ?>/verificar-credencial.php';"
@@ -121,7 +121,7 @@ $mobile_nav_items = [
 <nav class="sm:hidden fixed left-4 right-4 bottom-3 z-[95]" style="padding-bottom:env(safe-area-inset-bottom)" aria-label="Navegacion movil publica">
   <div class="relative mx-auto max-w-[430px] grid grid-cols-4 gap-1 rounded-full bg-[#023A63] border border-white/20 shadow-2xl p-2">
     <?php foreach ($mobile_nav_items as $item): ?>
-    <a href="<?= htmlspecialchars(BASE_URL . $item['url']) ?>"
+    <a href="<?= htmlspecialchars(public_nav_url($item['url'])) ?>"
        class="flex flex-col items-center justify-center gap-0.5 py-2 rounded-full text-[10px] font-bold transition-colors <?= $item['active'] ? 'bg-[#049CD4] text-white' : 'text-white/70' ?>"
        <?= isset($item['action']) ? 'onclick="' . htmlspecialchars($item['action'], ENT_QUOTES) . '"' : '' ?>>
       <?= htmlspecialchars($item['label']) ?>
