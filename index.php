@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/includes/config/db.php';
 
-if (!empty($_SESSION['admin_id'])) {
+if (!empty($_SESSION['admin_id']) && empty($_GET['preview'])) {
     header('Location: ' . BASE_URL . '/admin/dashboard.php');
     exit;
 }
@@ -61,6 +61,7 @@ $contact_map_iframe = cfg_value($cfg_camp, 'index_contact_map_iframe', '');
 
 $distritos_lista = ['Satipo', 'Rio Negro', 'Pangoa', 'Rio Tambo', 'Coviriali', 'Llaylla', 'Vizcatan del Ene', 'Pampa Hermosa', 'Mazamari'];
 $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pintado', 'Coordinacion en mi Zona'];
+$es_preview_admin = !empty($_SESSION['admin_id']) && !empty($_GET['preview']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -84,6 +85,13 @@ $formas_apoyo_opciones = ['Volanteo', 'Redes sociales', 'Movilizaciones', 'Pinta
   </style>
 </head>
 <body class="bg-white text-gray-800">
+
+  <?php if ($es_preview_admin): ?>
+  <div class="sticky top-0 z-[200] bg-[#023A63] text-white text-xs sm:text-sm font-bold px-4 py-2.5 flex items-center justify-center gap-3 text-center">
+    <span>Estas viendo una vista previa del sitio publico como administrador.</span>
+    <a href="<?= BASE_URL ?>/admin/dashboard.php" class="underline hover:text-white/80 whitespace-nowrap">Volver al dashboard</a>
+  </div>
+  <?php endif; ?>
 
   <?php require __DIR__ . '/includes/navbar.php'; ?>
 

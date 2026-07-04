@@ -234,7 +234,7 @@ require __DIR__ . '/layout.php';
       <h1 class="text-xl font-black text-gray-900">Configurar Página</h1>
       <p class="text-sm text-gray-400 mt-0.5">Favicon, login, identidad del partido, colores y contador del sitio.</p>
     </div>
-    <a href="<?= BASE_URL ?>/index.php" target="_blank"
+    <a href="<?= BASE_URL ?>/index.php?preview=1" target="_blank"
        class="inline-flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-[#049CD4] border border-gray-200 rounded-xl px-4 py-2 bg-white transition-colors">
       Ver sitio
     </a>
@@ -600,7 +600,7 @@ require __DIR__ . '/layout.php';
     </div>
 
     <div class="sticky bottom-0 bg-[#F1F5F9]/95 backdrop-blur py-4 flex justify-end gap-3">
-      <a href="<?= BASE_URL ?>/index.php" target="_blank" class="bg-white border border-gray-200 text-gray-600 font-bold px-5 py-3 rounded-xl text-sm">Ver sitio</a>
+      <a href="<?= BASE_URL ?>/index.php?preview=1" target="_blank" class="bg-white border border-gray-200 text-gray-600 font-bold px-5 py-3 rounded-xl text-sm">Ver sitio</a>
       <button type="submit" class="<?= $maint_on ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-[#049CD4] hover:bg-[#028FB7] text-white' ?> font-black px-8 py-3 rounded-xl text-sm shadow">
         <?= $maint_on ? 'Guardar / Desactivar' : 'Guardar / Activar' ?>
       </button>
