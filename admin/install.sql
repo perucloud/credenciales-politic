@@ -265,6 +265,32 @@ CREATE TABLE `militante_wa_plantillas` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `hero_slides` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `imagen` varchar(300) NOT NULL,
+  `titulo` varchar(200) DEFAULT NULL,
+  `subtitulo` varchar(255) DEFAULT NULL,
+  `boton_texto` varchar(100) DEFAULT NULL,
+  `boton_url` varchar(255) DEFAULT NULL,
+  `orden` int NOT NULL DEFAULT '0',
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `creado_en` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `noticias` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(300) NOT NULL,
+  `contenido` text,
+  `imagen` varchar(300) DEFAULT NULL,
+  `categoria` varchar(100) NOT NULL DEFAULT 'General',
+  `estado` enum('publicado','borrador') NOT NULL DEFAULT 'borrador',
+  `fecha` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_noticias_estado` (`estado`),
+  KEY `idx_noticias_fecha` (`fecha`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `usuario_permisos_modulo` (
   `usuario_id` int NOT NULL,
   `modulo` varchar(60) NOT NULL,

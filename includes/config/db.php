@@ -131,5 +131,33 @@ if (!defined('SKIP_DB_CONNECT')) {
             contenido TEXT NOT NULL,
             creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS hero_slides (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            imagen VARCHAR(300) NOT NULL,
+            titulo VARCHAR(200) NULL,
+            subtitulo VARCHAR(255) NULL,
+            boton_texto VARCHAR(100) NULL,
+            boton_url VARCHAR(255) NULL,
+            orden INT NOT NULL DEFAULT 0,
+            activo TINYINT(1) NOT NULL DEFAULT 1,
+            creado_en DATETIME DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $pdo->exec("CREATE TABLE IF NOT EXISTS noticias (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            titulo VARCHAR(300) NOT NULL,
+            contenido TEXT NULL,
+            imagen VARCHAR(300) NULL,
+            categoria VARCHAR(100) NOT NULL DEFAULT 'General',
+            estado ENUM('publicado','borrador') NOT NULL DEFAULT 'borrador',
+            fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_noticias_estado (estado),
+            INDEX idx_noticias_fecha (fecha)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $count_slides = (int)$pdo->query("SELECT COUNT(*) FROM hero_slides")->fetchColumn();
+        if ($count_slides === 0) {
+            $pdo->exec("INSERT INTO hero_slides (imagen, titulo, subtitulo, boton_texto, boton_url, orden) VALUES
+                ('https://placehold.co/1800x650/049CD4/FFFFFF?text=Renovacion+Popular', 'Juntos por el cambio', 'Renovacion Popular', 'Unete al equipo', '#unete', 1),
+                ('https://placehold.co/1800x650/028FB7/FFFFFF?text=Nuestro+Plan+de+Accion', 'Nuestro Plan de Accion', 'Propuestas para Satipo', 'Ver el plan', '#plan', 2)");
+        }
     } catch (Exception $_e) {}
 }
