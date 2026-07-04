@@ -159,5 +159,16 @@ if (!defined('SKIP_DB_CONNECT')) {
                 ('https://placehold.co/1800x650/049CD4/FFFFFF?text=Renovacion+Popular', 'Juntos por el cambio', 'Renovacion Popular', 'Unete al equipo', '#unete', 1),
                 ('https://placehold.co/1800x650/028FB7/FFFFFF?text=Nuestro+Plan+de+Accion', 'Nuestro Plan de Accion', 'Propuestas para Satipo', 'Ver el plan', '#plan', 2)");
         }
+        $pdo->exec("CREATE TABLE IF NOT EXISTS media_files (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(255) NOT NULL,
+            ruta VARCHAR(255) NOT NULL,
+            tipo VARCHAR(120) NOT NULL,
+            tamanio INT NOT NULL DEFAULT 0,
+            modulo VARCHAR(60) NOT NULL DEFAULT 'media',
+            usuario_id INT NULL,
+            creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_media_files_creado (creado_en)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
     } catch (Exception $_e) {}
 }

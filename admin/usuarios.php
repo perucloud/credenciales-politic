@@ -16,6 +16,10 @@ $modulos_disponibles = [
     'personeros'              => 'Personeros',
     'credenciales_modulo'      => 'Credenciales',
     'credenciales_escaneadas'  => 'Credenciales escaneadas',
+    'noticias'                => 'Noticias',
+    'media'                   => 'Archivos y Media',
+    'config_pagina'           => 'Configurar Página',
+    'config_index'            => 'Configurar Index',
 ];
 
 $flash = null;

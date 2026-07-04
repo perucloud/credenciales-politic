@@ -69,8 +69,21 @@ $secciones = [
     ],
   ],
   [
+    'titulo' => 'CONTENIDO',
+    'items'  => [
+      ['id'=>'noticias','href'=>'noticias.php','icon'=>'ti-news','icon_img'=>null,'label'=>'Noticias','rol'=>'editor','modulo'=>'noticias','solo_rol'=>null,'submenu'=>null],
+      ['id'=>'media','href'=>'media.php','icon'=>'ti-photo','icon_img'=>null,'label'=>'Archivos y Media','rol'=>'editor','modulo'=>'media','solo_rol'=>null,'submenu'=>null],
+    ],
+  ],
+  [
     'titulo' => 'ADMINISTRACION',
     'items'  => [
+      ['id'=>'configurar','href'=>'#','icon'=>'ti-adjustments-horizontal','icon_img'=>null,'label'=>'Configurar','rol'=>'editor','modulo'=>null,'solo_rol'=>null,
+        'submenu'=>[
+          ['href'=>'config-pagina.php', 'label'=>'Configurar Pagina', 'icon'=>'ti-settings-2', 'rol'=>'editor', 'modulo'=>'config_pagina', 'solo_rol'=>null],
+          ['href'=>'config-index.php',  'label'=>'Configurar Index',  'icon'=>'ti-layout',     'rol'=>'editor', 'modulo'=>'config_index',  'solo_rol'=>null],
+        ]
+      ],
       ['id'=>'usuarios','href'=>'usuarios.php','icon'=>'ti-users','icon_img'=>null,'label'=>'Usuarios','rol'=>'superadmin','modulo'=>null,'solo_rol'=>null,'submenu'=>null],
     ],
   ],

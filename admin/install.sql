@@ -291,6 +291,19 @@ CREATE TABLE `noticias` (
   KEY `idx_noticias_fecha` (`fecha`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `media_files` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) NOT NULL,
+  `ruta` varchar(255) NOT NULL,
+  `tipo` varchar(120) NOT NULL,
+  `tamanio` int NOT NULL DEFAULT '0',
+  `modulo` varchar(60) NOT NULL DEFAULT 'media',
+  `usuario_id` int DEFAULT NULL,
+  `creado_en` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_media_files_creado` (`creado_en`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `usuario_permisos_modulo` (
   `usuario_id` int NOT NULL,
   `modulo` varchar(60) NOT NULL,

@@ -14,6 +14,11 @@ try {
     $cfg_camp = $pdo->query("SELECT clave, valor FROM configuracion")->fetchAll(PDO::FETCH_KEY_PAIR);
 } catch (Exception $e) {}
 
+if (cfg_value($cfg_camp, 'maintenance_active', '0') === '1') {
+    header('Location: ' . BASE_URL . '/maintenance.php');
+    exit;
+}
+
 $brand_name = cfg_value($cfg_camp, 'site_brand_name', 'Credenciales App');
 $party_name = cfg_value($cfg_camp, 'partido_nombre', 'Renovacion Popular');
 
